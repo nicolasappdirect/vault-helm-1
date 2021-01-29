@@ -14,14 +14,14 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-{{- if .Values.server.service.standby.annotations }}
+{{- if hasKey Values.server.service.standby "annotations" }}
 {{ template "vault.service.standby.annotations" .}}
 {{- else }}
 {{ template "vault.service.annotations" .}}
 {{- end }}
 spec:
-  {{- if .Values.server.service.type}}
-  type: {{ .Values.server.service.type }}
+  {{- if .Values.server.service.standby.type }}
+  type: {{ .Values.server.service.standby.type }}
   {{- end}}
   {{- if .Values.server.service.clusterIP }}
   clusterIP: {{ .Values.server.service.clusterIP }}

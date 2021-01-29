@@ -14,15 +14,15 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-{{- if .Values.server.service.active.annotations }}
+{{- if hasKey .Values.server.service.active "annotations" }}
 {{ template "vault.service.active.annotations" .}}
 {{- else }}
 {{ template "vault.service.annotations" .}}
 {{- end }}
 spec:
-  {{- if .Values.server.service.active.type}}
+  {{- if .Values.server.service.active.type }}
   type: {{ .Values.server.service.active.type }}
-  {{- else if .Values.server.service.type}}
+  {{- else if .Values.server.service.type }}
   type: {{ .Values.server.service.type }}
   {{- end}}
   {{- if .Values.server.service.active.clusterIP }}

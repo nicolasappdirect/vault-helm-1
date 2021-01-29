@@ -412,6 +412,18 @@ server:
     # to the service.
     annotations: {}
 
+    active:
+      enabled: true
+      #annotations: {}
+      #type: clusterIP
+      #clusterIP: None
+
+    standby:
+      enabled: true
+      #annotations: {}
+      #type: clusterIP
+      #clusterIP: None
+
   # This configures the Vault Statefulset to create a PVC for data
   # storage when using the file or raft backend storage engines.
   # See https://www.vaultproject.io/docs/configuration/storage/index.html to know more
