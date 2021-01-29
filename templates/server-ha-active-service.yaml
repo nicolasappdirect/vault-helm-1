@@ -1,6 +1,7 @@
 {{ template "vault.mode" . }}
 {{- if ne .mode "external" }}
 {{- if and (eq .mode "ha" ) (and (eq (.Values.server.service.enabled | toString) "true" ) (eq (.Values.global.enabled | toString) "true")) }}
+{{- if (eq (.Values.server.service.active.enabled | toString) "true") }}
 # Service for active Vault pod
 apiVersion: v1
 kind: Service
@@ -13,12 +14,20 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
+{{- if .Values.server.service.active.annotations }}
+{{ template "vault.service.active.annotations" .}}
+{{- else }}
 {{ template "vault.service.annotations" .}}
+{{- end }}
 spec:
-  {{- if .Values.server.service.type}}
+  {{- if .Values.server.service.active.type}}
+  type: {{ .Values.server.service.active.type }}
+  {{- else if .Values.server.service.type}}
   type: {{ .Values.server.service.type }}
   {{- end}}
-  {{- if .Values.server.service.clusterIP }}
+  {{- if .Values.server.service.active.clusterIP }}
+  clusterIP: {{ .Values.server.service.active.clusterIP }}
+  {{- else if .Values.server.service.clusterIP }}
   clusterIP: {{ .Values.server.service.clusterIP }}
   {{- end }}
   publishNotReadyAddresses: true
@@ -37,5 +46,6 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}
     component: server
     vault-active: "true"
+{{- end }}
 {{- end }}
 {{- end }}

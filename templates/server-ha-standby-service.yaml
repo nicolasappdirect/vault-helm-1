@@ -1,6 +1,7 @@
 {{ template "vault.mode" . }}
 {{- if ne .mode "external" }}
 {{- if and (eq .mode "ha" ) (and (eq (.Values.server.service.enabled | toString) "true" ) (eq (.Values.global.enabled | toString) "true")) }}
+{{- if (eq (.Values.server.service.standby.enabled | toString) "true") }}
 # Service for standby Vault pod
 apiVersion: v1
 kind: Service
@@ -13,7 +14,11 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
+{{- if .Values.server.service.standby.annotations }}
+{{ template "vault.service.standby.annotations" .}}
+{{- else }}
 {{ template "vault.service.annotations" .}}
+{{- end }}
 spec:
   {{- if .Values.server.service.type}}
   type: {{ .Values.server.service.type }}
@@ -37,5 +42,6 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}
     component: server
     vault-active: "false"
+{{- end }}
 {{- end }}
 {{- end }}
